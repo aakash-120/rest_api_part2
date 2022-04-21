@@ -1,0 +1,69 @@
+<style> 
+input[type=text] {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid red;
+  border-radius: 4px;
+  font-family:'Copperplate';
+  font-size: medium;
+}
+p{
+    font-family:'Times New Roman', Times, serif;
+  font-size: larger;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.login {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+
+.login:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+.login {padding: 16px 32px;}
+
+
+
+
+</style>
+
+<h2>Sign up using this form</h2>
+
+<?php echo $this->tag->form("/signup/register"); ?>
+
+    <p>
+        <label for="name">Name</label>
+        <?php echo $this->tag->textField("name"); ?>
+    </p>
+
+    <p>
+        <label for="email">E-Mail</label>
+        <?php echo $this->tag->textField("email"); ?>
+    </p>
+    <p>
+        <label for="password">Password</label>
+        <?php echo $this->tag->textField("password"); ?>
+    </p>
+
+    <p>
+        <?php echo $this->tag->submitButton("Register"); ?>
+    </p>
+
+</form>
