@@ -1,0 +1,218 @@
+
+<style> 
+input[type=text] {
+  width: 40%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid red;
+  border-radius: 4px;
+  font-family:'Copperplate';
+  font-size: medium;
+}
+p{
+    font-family:'Times New Roman', Times, serif;
+  font-size: larger;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  /* padding: 16px 32px; */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.login{
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+
+.login:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+
+#add_row, #del_row, #add_var ,#del_var{
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+  font-size: 30px;
+}
+
+#add_row:hover, #del_row:hover , #add_var:hover ,#del_var:hover{
+  background-color: #4CAF50;
+ 
+  color: white;
+  font-size: 30px;
+}
+/* #add_row, #del_row {padding: 16px 32px;} */
+
+
+h2{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 40px;
+}
+h3{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 30px;
+}
+
+label{
+display: inline-block;
+width:100px;
+}
+
+
+</style>
+
+
+<?php include(APP_PATH . '/admin/views/index/index.phtml'); ?>
+<br>
+<h2>Add Product</h2>
+
+<?php
+echo $this->tag->form("admin/addproduct/register");
+?>
+
+<p>
+    <label for="productname">Product name :</label>
+
+    <input type="text" name="productname" id="" value="<?php if (isset($edit)) {
+                                                            echo $edit->product_name;
+                                                        } ?>">
+</p>
+
+<p>
+    <label for="categoryname">Category name</label>
+    <input type="text" name="categoryname" id="" value="<?php if (isset($edit)) {
+                                                            echo $edit->category_name;
+                                                        } ?>">
+
+</p>
+<p>
+    <label for="price">Price :</label>
+    <input type="text" name="price" id="" value="<?php if (isset($edit)) {
+                                                        echo $edit->price;
+                                                    } ?>">
+
+</p>
+<p>
+    <label for="stock">Stock</label>
+    <input type="text" name="stock" id="" value="<?php if (isset($edit)) {
+                                                        echo $edit->stock;
+                                                    } ?>">
+
+
+</p>
+<div>
+<h3>Label</h3>
+    <input type="hidden" name='id' value="<?php if (isset($edit)) {
+                                                echo $edit->_id;
+                                            }; ?>">
+    <input type="button" onclick="addfield()" id="add_row" value="+">
+    <input type="button" onclick="delfield()" id="del_row" value="-">
+
+
+    <p id="label">
+        <?php
+        if (isset($edit->label_value)) {
+            foreach ($edit->label_value as $val) {
+                echo "<input type = 'text' name = 'label[]' value = '" . $val->label . "'>
+            <input type = 'text' name = 'input[]' value = '" . $val->value . "'><br><br>";
+            }
+        } ?>
+    </p>
+</div>
+
+<div>
+    <h3>Variation</h3>
+    <input type="button" onclick="addvariation()" value="+" id="add_var">
+    <input type="button" onclick="delvariation()" value="-" id = "del_var">
+
+    <p id="attribute">
+        <?php
+        if (isset($edit->variation)) {
+            foreach ($edit->variation as $val) {
+                echo "<input type = 'text' name = 'variation_name[]' value = '" . $val->name . "'>
+            <input type = 'text' name = 'variation_value[]' value = '" . $val->value . "'>
+            <input type = 'text' name = 'variation_price[]' value = '" . $val->price . "'>";
+        }
+        echo "<br><br>";
+        } ?>
+    </p>
+
+</div>
+<?php if (isset($edit)) { ?>
+    <p>
+        <?php echo $this->tag->submitButton(["update product", 'name' => 'updateproduct','class' => 'btn btn-success' ]); ?>
+    </p>
+<?php } else { ?>
+    <p>
+        <?php echo $this->tag->submitButton(["add product", 'name' => 'addproduct' ,'class' => 'btn btn-success']); ?>
+    </p>
+<?php } ?>
+</form>
+<script>
+    var add_label = document.getElementById('label');
+    var variation = document.getElementById('attribute');
+
+
+    function addfield() {
+        let div = document.createElement("div");
+
+        let label = document.createElement("input");
+        label.setAttribute("type", "text");
+        label.setAttribute("placeholder", "label");
+        label.setAttribute("name", "label[]");
+
+        let input = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("placeholder", "input");
+        input.setAttribute("name", "input[]");
+        div.append(label);
+        div.append(input);
+        add_label.append(div);
+    }
+
+    function delfield() {
+        add_label.removeChild(add_label.lastElementChild);
+    }
+
+
+    function addvariation() {
+        let div = document.createElement("div");
+        let name = document.createElement("input");
+        name.setAttribute("type", "text");
+        name.setAttribute("placeholder", "label");
+        name.setAttribute("name", "variation_name[]");
+
+        let value = document.createElement("input");
+        value.setAttribute("type", "text");
+        value.setAttribute("placeholder", "value");
+        value.setAttribute("name", "variation_value[]");
+
+        let price = document.createElement("input");
+        price.setAttribute("type", "number");
+        price.setAttribute("placeholder", "price");
+        price.setAttribute("name", "variation_price[]");
+
+        div.append(name);
+        div.append(value);
+        div.append(price);
+        variation.append(div);
+    }
+
+    function delvariation() {
+        variation.removeChild(variation.lastElementChild);
+
+    }
+</script>

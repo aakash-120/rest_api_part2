@@ -20,30 +20,33 @@ $loader->register();
 $product = new Api\Handlers\Product();
 $container = new FactoryDefault();
 
+
 $app = new Micro($container);
 
-$app->before(
-    function () use ($app) {
-        if (!str_contains($_SERVER['REQUEST_URI'], 'gettoken')) {
-            $token = $app->request->getQuery("token");
-            if (!$token) {
-                echo 'Token not provided"';
-                die;
-            }
-            $key = 'example_key';
-            try {
-                $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            } catch (\Firebase\JWT\ExpiredException $e) {
-                echo 'Caught exception: ',  $e->getMessage(), "\n";
-                die;
-            }
-            if ($decoded->role != 'admin') {
-                echo 'Permission Denied';
-                die;
-            }
-        }
-    }
-);
+
+
+// $app->before(
+//     function () use ($app) {
+//         if (!str_contains($_SERVER['REQUEST_URI'], 'gettoken')) {
+//             $token = $app->request->getQuery("token");
+//             if (!$token) {
+//                 echo 'Token not provided"';
+//                 die;
+//             }
+//             $key = 'example_key';
+//             try {
+//                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
+//             } catch (\Firebase\JWT\ExpiredException $e) {
+//                 echo 'Caught exception: ',  $e->getMessage(), "\n";
+//                 die;
+//             }
+//             if ($decoded->role != 'admin') {
+//                 echo 'Permission Denied';
+//                 die;
+//             }
+//         }
+//     }
+// );
 
 $app->get(
     '/invoices/view/{id}/{where}/{limit}/{page}',
@@ -70,7 +73,7 @@ $app->get(
 );
 
 $app->get(
-    '/gettoken',
+    '/api/gettoken',
     [
         $product,
         'gettoken'
@@ -78,11 +81,26 @@ $app->get(
 );
 
 
-$app->get(
-    '/product/addProducts/{keyword}',
+// $app->get(
+//     '/api/product/addproduct/',
+//     [
+//         $product,
+//         'addproduct'
+//     ]
+// );
+$app->post(
+    '/api/products/add',
     [
         $product,
-        'addProducts'
+        'add'
+    ]
+);
+
+$app->get(
+    '/api/productlist/list',
+    [
+        $product,
+        'list'
     ]
 );
 
@@ -92,7 +110,7 @@ $container->set(
     function () {
         $mongo = new MongoDB\Client("mongodb://root:password123@mongo");
 
-        return $mongo->store;
+        return $mongo;
     },
     true
 );

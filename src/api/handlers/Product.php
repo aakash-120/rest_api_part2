@@ -8,52 +8,7 @@ use Firebase\JWT\Key;
 
 class Product extends Injectable
 {
-    function get($select = "", $where = "", $limit = 10, $page = 1)
-    {
-        $products = array(
-            array('select' => $select, 'where' => $where, 'limit' => $limit, 'page' => $page),
-            array('name' => 'Product 2', 'price' => 40)
-        );
-        return json_encode($products);
-    }
-
-    // function getProducts($pageNumber = "", $nPerPage ="") {
-    //     print( "Page: " + $pageNumber );
-    //     $this->mongo->products->find()
-    //                .sort( { _id: 1 } )
-    //                .skip( $pageNumber > 0 ? ( ( $pageNumber - 1 ) * $nPerPage ) : 0 )
-    //                .limit( $nPerPage )
-    //                .forEach( $product => {
-    //                  print( $products->name );
-    //                } );
-    //   }
-    function getProducts($per_page = "", $page = "")
-    {
-        
-     $collection = $this->mongo->products->find();
-  // $collection = $this->mongo->products->find()->limit(3);
-       $array = $collection->toArray();
-  
-       
-      //  $len = count($array);
-      //  echo $len;
-     //   echo $per_page * $page;
-
-     
-       // if ($len >= $per_page * $page)
-        // {
-        //     echo "found";
-        // }
-        // else {
-        //     echo "not found";
-        // }
-
-
-     //   print_r($array);
-
-        
-        return json_encode($array);
-    }
+   
     function searchProducts($keyword = "")
     {
         $keywords = explode(" ", urldecode($keyword));
@@ -70,8 +25,6 @@ class Product extends Injectable
             array_push($array, $products->toArray());
         }
         return json_encode($array);
-        // print_r(json_encode($array));
-        // die;
     }
 
     function gettoken()
@@ -86,17 +39,42 @@ class Product extends Injectable
         );
 
         $jwt = JWT::encode($payload, $key, 'HS256');
-
         return $jwt;
     }
 
-    function addProducts($keyword = "")
+  
+    public function add()
     {
-        echo $keyword;
-        $collection = $this->mongo->products;
-        $insertOneResult = $collection->insertOne(['name' => $keyword]);
-
+        $insert = $this->request->getPost();
+        $key = "example_key";
+        $bearer = $this->request->get('token');
+        $jwt = JWT::decode($bearer, new Key($key, 'HS256'));
+        if (isset($jwt)) {
+            $data = $this->mongo->test->products->insertOne([
+                'name' => $insert['name'],
+                'price' => $insert['price'],
+                'category' => $insert['category'],
+                'quantity' => $insert['quantity'],
+            ]);
+            echo "<pre>";
+            print_r($data);
+        }
+        else{
+            echo "provide token";
+            die;
+        }
     }
 
-    
+
+    public function list()
+    {
+        $productlist = $this->mongo->test->products->find();
+        // print_r("<pre>");
+        // print_r($productlist->toArray());
+        // die;
+        foreach ($productlist as $key => $value) {
+            $val[] = $value;
+        }
+        echo json_encode($val);
+    }
 }

@@ -41,4 +41,8 @@ class SignupController extends Controller{
 
     return $jwt;
 }
+
+
+
+
 }
