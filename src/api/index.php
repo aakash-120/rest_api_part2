@@ -18,6 +18,8 @@ $loader->registerNamespaces(
 $loader->register();
 
 $product = new Api\Handlers\Product();
+$order = new Api\Handlers\Order();
+
 $container = new FactoryDefault();
 
 
@@ -27,7 +29,7 @@ $app = new Micro($container);
 
 // $app->before(
 //     function () use ($app) {
-//         if (!str_contains($_SERVER['REQUEST_URI'], 'gettoken')) {
+//         if (!str_contains($_SERVER['REQUEST_URI'], 'gettoken') && !str_contains($_SERVER['REQUEST_URI'], 'order')) {
 //             $token = $app->request->getQuery("token");
 //             if (!$token) {
 //                 echo 'Token not provided"';
@@ -36,17 +38,20 @@ $app = new Micro($container);
 //             $key = 'example_key';
 //             try {
 //                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
+//                 // print_r($decoded);
+//                 // die;
 //             } catch (\Firebase\JWT\ExpiredException $e) {
 //                 echo 'Caught exception: ',  $e->getMessage(), "\n";
 //                 die;
 //             }
-//             if ($decoded->role != 'admin') {
-//                 echo 'Permission Denied';
-//                 die;
-//             }
+//             // if ($decoded->role != 'admin') {
+//             //     echo 'Permission Denied';
+//             //     die;
+//             // }
 //         }
 //     }
 // );
+
 
 $app->get(
     '/invoices/view/{id}/{where}/{limit}/{page}',
@@ -81,13 +86,7 @@ $app->get(
 );
 
 
-// $app->get(
-//     '/api/product/addproduct/',
-//     [
-//         $product,
-//         'addproduct'
-//     ]
-// );
+
 $app->post(
     '/api/products/add',
     [
@@ -101,6 +100,22 @@ $app->get(
     [
         $product,
         'list'
+    ]
+);
+
+$app->post(
+    '/api/order/placeorder',
+    [
+        $order,
+        'placeorder'
+    ]
+);
+
+$app->put(
+    '/api/order/updateorder',
+    [
+        $order,
+        'updateorder'
     ]
 );
 

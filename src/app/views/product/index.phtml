@@ -1,6 +1,9 @@
 <?php
 // echo "<pre>";
 // print_r($productlist);
+
+
+
 ?>
 <style>
    table {
@@ -75,7 +78,7 @@
   border-radius: 5px;
   width: 30%;
   position: relative;
-  transition: all 5s ease-in-out;print_r($products->toArray()
+  transition: all 5s ease-in-out;
 }
 
 .popup h2 {
@@ -112,9 +115,7 @@
 <table id="myTable">
    <caption><a href="/product/view">Home</a></caption>
    <caption><a href="/order/view">Order</a></caption>
-   <span><label for="search" style="margin-left: 20%;">Search:</label></span>
-   <span><input type="text" id="search" name="search" placeholder="Search for names.." title="Type in a name"></span>
-   <span><input type="submit" value="search"></span>   
+ 
 
    <thead>
       <tr>
@@ -135,7 +136,7 @@
            foreach ($productlist as $key) { ?>
             <form action="/product/orderPlaced" method="post">
          <tr>
-            <td><img src="https://i.postimg.cc/yYYd1HV1/katara.jpg" alt="img"></td>
+            <td><img src="https://cdn2.vectorstock.com/i/1000x1000/95/51/little-boy-logo-vector-28159551.jpg" alt="img"></td>
 
             <td><input type="hidden" name="name" value="<?php echo $key['name']; ?>"><?php echo $key['name']; ?></td>
 
@@ -146,7 +147,7 @@
             <td><input type="hidden" name="quantity" value="<?php echo $key['quantity']; ?>"><?php echo $key['quantity']; ?></td>
 
             <td><input type="hidden" name="id" value="<?php echo $key['_id']['$oid'] ?>">
-              <input type="submit" name="submit" value="Add"></td>
+              <input type="submit" name="submit" value="Add" ></td>
             </tr>
          </form>
       <?php } } ?>

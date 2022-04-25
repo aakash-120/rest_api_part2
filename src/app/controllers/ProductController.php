@@ -10,8 +10,8 @@ class ProductController extends Controller
     public function indexAction()
     {
         $url = "http://192.168.2.8:8080/api/productlist/list";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = curl_init($url);
+     //   curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         $res = json_decode($response, true);

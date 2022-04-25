@@ -5,26 +5,51 @@ namespace Api\Handlers;
 use Phalcon\Di\Injectable;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Phalcon\Http\Response;
+
 
 class Product extends Injectable
 {
-   
+    
+    function getProducts($per_page = 10, $page = 1)
+    {
+        $collection = $this->mongo->products->find();
+        // foreach ($collection as $k => $v) {
+        //     echo '<pre>';
+        //     echo $v->brand;
+        $array = $collection->toArray();
+        return json_encode($array);
+    }
+    
     function searchProducts($keyword = "")
     {
-        $keywords = explode(" ", urldecode($keyword));
-        $array = [];
-        foreach ($keywords as $value) {
+        $response = new Response();
+
+        if (strpos($keyword, "%20") == true) {
+            $newstr = explode("%20", $keyword);
+            foreach ($newstr as $str) {
+                $arr[] = array('name' => ['$regex' => $str]);
+            }
+            $products = $this->mongo->products->find(['$or' => $arr])->toArray();
+        } else {
             $products = $this->mongo->products->find(
                 [
                     'name' => [
-                        '$regex' => $value,
+                        '$regex' => $keyword,
                         '$options' => '$i'
                     ]
                 ]
-            );
-            array_push($array, $products->toArray());
+            )->toArray();
         }
-        return json_encode($array);
+
+        if(json_encode($products)=="[]"){
+            return json_encode(array("status"=>"404, please enter correct keyword"));
+        }
+        else{
+            $data = ["status" => 200, "data" => array_values($products)];
+            // return json_encode($data);
+           return $response->setJSONContent($data)->send();
+        }
     }
 
     function gettoken()
